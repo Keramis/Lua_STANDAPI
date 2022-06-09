@@ -260,12 +260,14 @@ Use these coordinates in other functions as inputs. Since it's a table, you can 
 ## So.. how the fuck do you use these?
 
 Well, to use natives, you will need to include the `natives-xxxx` file. This can be done with:
-`util.require_natives(xxxx)`. The most recent version is `1640181023`, so you would do
-`util.require_natives(1640181023)` at the top of your script.
+`util.require_natives(xxxx)`. The most recent version is `1651208000`, so you would do
+`util.require_natives(1651208000)` at the top of your script.
+
+Fun fact: The number at the end of the name is a unix timestamp from when the file was generated :)
 
 ```lua
 util.keep_running()
-util.require_natives(1640181023)
+util.require_natives(1651208000)
 --now we do our code here!
 ```
 

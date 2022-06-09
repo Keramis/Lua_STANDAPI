@@ -22,6 +22,95 @@ Got your basic knowledge? Good. You should've learned:
     - These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
 - Maybe something else? These are just the basics, after all.
 
+## Setting up your environment // by jerry123
+
+Before you start writing any code you will have to choose a code editor. There's a lot of code editors you can use, however visual studio code is the most common one, it's what I use and is most familiar with so that's what I'll explain how too use. If you don't already have it installed you will have to [Download](https://code.visualstudio.com/download) it.
+
+![Screenshot%2022-06-09%172811.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20172811.jpg)
+
+Once you've set up visual studio code we'll head over to the sidebar and search for the lua extension, click install on the top one you see in the image above. This will help you with linting. This isn't going to be perfect so we'll have to go into visual studio settings and change some stuff.
+
+![Screenshot%202022-06-09%20184923.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20184923.jpg)
+
+The lua linter will conplain about indefined globals witch includes functions from stands api and natives. I would suggest adding all of the functions from stands api and the most common navive namespaces, or you can just copy paste ALL of them into your visual studio settings.json file like you see bellow.
+```json
+"Lua.diagnostics.globals": [
+    "menu",
+    "players",
+    "entities",
+    "chat",
+    "directx",
+    "util",
+    "v3",
+    "lang",
+    "filesystem",
+    "https",
+    "memory",
+    "profiling",
+    "SYSTEM",
+    "APP",
+    "AUDIO",
+    "BRAIN",
+    "CAM",
+    "CLOCK",
+    "CUTSCENE",
+    "DATAFILE",
+    "DECORATOR",
+    "DLC",
+    "ENTITY",
+    "EVENT",
+    "FILES",
+    "FIRE",
+    "GRAPHICS",
+    "HUD",
+    "INTERIOR",
+    "ITEMSET",
+    "LOADINGSCREEN",
+    "LOCALIZATION",
+    "MISC",
+    "MOBILE",
+    "MONEY",
+    "NETSHOPPING",
+    "NETWORK",
+    "OBJECT",
+    "PAD",
+    "PATHFIND",
+    "PED",
+    "PHYSICS",
+    "PLAYER",
+    "RECORDING",
+    "REPLAY",
+    "SAVEMIGRATION",
+    "SCRIPT",
+    "SECURITY",
+    "SHAPETEST",
+    "SOCIALCLUB",
+    "STATS",
+    "STREAMING",
+    "TASK",
+    "VEHICLE",
+    "WATER",
+    "WEAPON",
+    "ZONE"
+],
+```
+
+
+![Screenshot%202022-06-09%20173419.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20173419.jpg)
+
+Stands supports some operators that isn't in base lua so if you want to use these without the linter complaining about it you will have to go into settings and change this setting. Alternatively you can add the text below to your settings.json
+
+```json
+"Lua.runtime.nonstandardSymbol": [
+    "+=",
+    "-=",
+    "!=",
+    "*=",
+    "/="
+],
+```
+
+
 ## Time for the interesting portion!
 
 Make sure you read everything beforehand, and followed the steps (watch the tutorial already dammit). If you haven't, this will be... let's say... a bit difficult.
@@ -171,12 +260,14 @@ Use these coordinates in other functions as inputs. Since it's a table, you can 
 ## So.. how the fuck do you use these?
 
 Well, to use natives, you will need to include the `natives-xxxx` file. This can be done with:
-`util.require_natives(xxxx)`. The most recent version is `1640181023`, so you would do
-`util.require_natives(1640181023)` at the top of your script.
+`util.require_natives(xxxx)`. The most recent version is `1651208000`, so you would do
+`util.require_natives(1651208000)` at the top of your script.
+
+Fun fact: The number at the end of the name is a unix timestamp from when the file was generated :)
 
 ```lua
 util.keep_running()
-util.require_natives(1640181023)
+util.require_natives(1651208000)
 --now we do our code here!
 ```
 

@@ -44,7 +44,7 @@ The lua linter will conplain about indefined globals witch includes functions fr
     "v3",
     "lang",
     "filesystem",
-    "https",
+    "async_http",
     "memory",
     "profiling",
     "SYSTEM",
@@ -107,6 +107,13 @@ Stands supports some operators that isn't in base lua so if you want to use thes
     "!=",
     "*=",
     "/="
+],
+```
+I would also recommend adding these to your settings
+```json
+"Lua.diagnostics.disable": [
+    "local-limit",
+    "lowercase-global"
 ],
 ```
 

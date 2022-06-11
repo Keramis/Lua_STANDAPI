@@ -32,7 +32,7 @@ Once you've set up visual studio code we'll head over to the sidebar and search 
 
 ![Screenshot%202022-06-09%20184923.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20184923.jpg)
 
-The lua linter will conplain about indefined globals witch includes functions from stands api and natives. I would suggest adding all of the functions from stands api and the most common navive namespaces, or you can just copy paste ALL of them into your visual studio settings.json file like you see bellow.
+The lua linter will conplain about indefined globals witch includes functions from stands api and natives. I would suggest adding all of the functions from stands api and the most common navive namespaces, or you can just copy paste ALL of them into your visual studio `settings.json` file like you see bellow.
 ```json
 "Lua.diagnostics.globals": [
     "menu",
@@ -98,7 +98,7 @@ The lua linter will conplain about indefined globals witch includes functions fr
 
 ![Screenshot%202022-06-09%20173419.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20173419.jpg)
 
-Stands supports some operators that isn't in base lua so if you want to use these without the linter complaining about it you will have to go into settings and change this setting. Alternatively you can add the text below to your settings.json
+Stands supports some operators that isn't in base lua so if you want to use these without the linter complaining about it you will have to go into settings and change this setting. Alternatively you can add the text below to your `settings.json`.
 
 ```json
 "Lua.runtime.nonstandardSymbol": [
@@ -109,7 +109,7 @@ Stands supports some operators that isn't in base lua so if you want to use thes
     "/="
 ],
 ```
-I would also recommend adding these to your settings
+I would also recommend adding these to your settings.
 ```json
 "Lua.diagnostics.disable": [
     "local-limit",

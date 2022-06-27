@@ -16,15 +16,45 @@ It's very important to understand the basics of Lua before you dive into develop
 
 Got your basic knowledge? Good. You should've learned:
 
-- Variables (local and global)
-    - These store values. Any values, since Lua is dynamically-typed, meaning you do not need to define types (other languages, like C++, require you to say *what* your variable is going to be, whether an `integer`, `string`, `float`, etc.)
-- Tables (also known as `arrays` or `matrixes` in other programming languages)
-    - These group together values, and can group together variables as well, since... those are just values.
-- Functions
-    - These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
-- Basic control flow.
-    - Loop statements such as `while`, or `repeat`. Conditional statements like `if`, and so on.
-- These are the main things, but there's many other facets of Lua you can learn to improve your skillset.
+### [Types](https://www.lua.org/pil/2.html)
+Lua has several basic types, but these four are the most common.
+- `nil`
+- `string`
+- `number`
+- `boolean`
+
+### [Expressions & Operators](https://www.lua.org/pil/3.html)
+Expressions include things like basic arthimetic — for example, addition, subtraction — and the priority of these operations so you don't accidentally perform one before another.
+
+### [Variables](https://www.lua.org/pil/4.2.html)
+These are basically 'containers' for values. These containers are identified by alphanumeric names — these are called identifiers — and they come in two types: global variables, and local variables. As you would've learned plenty about local variables from your basic knowledge, you should note that all global variables are really keys inside the `_G` table.
+
+Such that:
+```lua
+function hello()
+    print("Hello, World!")
+end
+```
+Is equal to:
+```lua
+function _G.hello()
+    print("Hello, World!")
+end
+```
+This is why it's generally encouraged to make functions local.
+
+### [Tables](https://www.lua.org/pil/11.html)
+These group together values, and can group together variables as well, since... those are just values. Tables in Lua implement two common types: (1) An array; and (2) A dictionary. These map keys to values, and a key can be anything. In the example below, the key is `"hello"` and the value is `"value"`. However, the key can be a number, another table, or even a function object, just like the value. Tables in Lua can both be used for dictionaries and arrays, even at the same time.
+```lua
+local mytable = {}
+mytable["hello"] = "value"
+print(mytable["hello"]) --> "value"
+```
+### [Functions](https://www.lua.org/pil/5.html)
+These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
+
+### [Statements](https://www.lua.org/pil/4.html)
+Loop statements such as `while`, or `repeat`. Conditional statements like `if`, and so on are vital in controlling the execution of your script.
 
 ## Setting up your environment // by jerry123
 

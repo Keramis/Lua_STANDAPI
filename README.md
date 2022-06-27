@@ -3,24 +3,28 @@
 ---
 
 ### Hello! It's your friendly neighborhood scriptcat.
-I made this in the hopes to stop getting people to stop asking ***very stupid*** questions in the `#programming` channel.
-Hopefully this guide serves you somewhat well. Of course, if you have any questions, pop it into `#programming`, but I swear to god if even a single person asks "what is a boolean?" I will shit myself.
+I made this in the hopes to stop getting people to stop asking very simple questions in the `#programming` channel.
+Hopefully this guide serves you somewhat well. Of course, if you have any questions, pop it into `#programming`, but please do ensure that your solution isn't readily avalible on Google first.
 
 ## So, what the hell is LUA?
 
-Not going to lie, you should probably go through some YouTube tutorials on LUA. This will teach you a few things, nicknacks, and mostly Stand's API and the Natives for GTAV. I'm not going to go into too much depth on how to actually use the things that LUA has to offer because, frankly, other people have done it way better.
+You should probably go through some YouTube tutorials on Lua. This will teach you a few things, nicknacks, and mostly Stand's API and the Natives for GTAV. I'm not going to go into too much depth on how to actually use the things that Lua has to offer because, frankly, other people have done it way better. However, you should certainly give the Programming in Lua book a read, which has a free online version here: https://www.lua.org/pil/contents.html
+
+It's very important to understand the basics of Lua before you dive into developing scripts, even if your script is simple. This will make the process much easier on you, and also allow you to write much more efficient scripts than you would otherwise. Feel free to ask for clarification in the `#programming` channel if you don't understand something from the Lua website.
 
 ## You should probably watch a YouTube tutorial to get the general gist of the language.
 
 Got your basic knowledge? Good. You should've learned:
 
 - Variables (local and global)
-    - These store values. Any values, since LUA is dynamically-typed, meaning you do not need to define types (other languages, like C++, require you to say *what* your variable is going to be, whether an `integer`, `string`, `float`, etc.)
+    - These store values. Any values, since Lua is dynamically-typed, meaning you do not need to define types (other languages, like C++, require you to say *what* your variable is going to be, whether an `integer`, `string`, `float`, etc.)
 - Tables (also known as `arrays` or `matrixes` in other programming languages)
     - These group together values, and can group together variables as well, since... those are just values.
 - Functions
     - These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
-- Maybe something else? These are just the basics, after all.
+- Basic control flow.
+    - Loop statements such as `while`, or `repeat`. Conditional statements like `if`, and so on.
+- These are the main things, but there's many other facets of Lua you can learn to improve your skillset.
 
 ## Setting up your environment // by jerry123
 
@@ -187,7 +191,8 @@ Notice how we have a function **inside of the menu.action**? Basically, we can m
 We could've done:
 
 ```lua
-local function notificationHi() --it's a LOCAL function because it's only used here, not GLOBAL to be used everywhere.
+local function notificationHi()
+    -- it's a LOCAL function because it's only used here, not GLOBAL to be used outside of the script.
     util.toast("Hi!")
 end
 menu.action(menu.my_root(), "Hi Button!", {}, "Help text", sayHi)

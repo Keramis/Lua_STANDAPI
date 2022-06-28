@@ -3,24 +3,58 @@
 ---
 
 ### Hello! It's your friendly neighborhood scriptcat.
-I made this in the hopes to stop getting people to stop asking ***very stupid*** questions in the `#programming` channel.
-Hopefully this guide serves you somewhat well. Of course, if you have any questions, pop it into `#programming`, but I swear to god if even a single person asks "what is a boolean?" I will shit myself.
+I made this in the hopes to stop getting people to stop asking very simple questions in the `#programming` channel.
+Hopefully this guide serves you somewhat well. Of course, if you have any questions, pop it into `#programming`, but please do ensure that your solution isn't readily avalible on Google first.
 
 ## So, what the hell is LUA?
 
-Not going to lie, you should probably go through some YouTube tutorials on LUA. This will teach you a few things, nicknacks, and mostly Stand's API and the Natives for GTAV. I'm not going to go into too much depth on how to actually use the things that LUA has to offer because, frankly, other people have done it way better.
+You should probably go through some YouTube tutorials on Lua. This will teach you a few things, nicknacks, and mostly Stand's API and the Natives for GTAV. I'm not going to go into too much depth on how to actually use the things that Lua has to offer because, frankly, other people have done it way better. However, you should certainly give the Programming in Lua book a read, which has a free online version here: https://www.lua.org/pil/contents.html
+
+It's very important to understand the basics of Lua before you dive into developing scripts, even if your script is simple. This will make the process much easier on you, and also allow you to write much more efficient scripts than you would otherwise. Feel free to ask for clarification in the `#programming` channel if you don't understand something from the Lua website.
 
 ## You should probably watch a YouTube tutorial to get the general gist of the language.
 
 Got your basic knowledge? Good. You should've learned:
 
-- Variables (local and global)
-    - These store values. Any values, since LUA is dynamically-typed, meaning you do not need to define types (other languages, like C++, require you to say *what* your variable is going to be, whether an `integer`, `string`, `float`, etc.)
-- Tables (also known as `arrays` or `matrixes` in other programming languages)
-    - These group together values, and can group together variables as well, since... those are just values.
-- Functions
-    - These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
-- Maybe something else? These are just the basics, after all.
+### [Types](https://www.lua.org/pil/2.html)
+Lua has several basic types, but these four are the most common.
+- `nil`
+- `string`
+- `number`
+- `boolean`
+
+### [Expressions & Operators](https://www.lua.org/pil/3.html)
+Expressions include things like basic arthimetic — for example, addition, subtraction — and the priority of these operations so you don't accidentally perform one before another.
+
+### [Variables](https://www.lua.org/pil/4.2.html)
+These are basically 'containers' for values. These containers are identified by alphanumeric names — these are called identifiers — and they come in two types: global variables, and local variables. As you would've learned plenty about local variables from your basic knowledge, you should note that all global variables are really keys inside the `_G` table.
+
+Such that:
+```lua
+function hello()
+    print("Hello, World!")
+end
+```
+Is equal to:
+```lua
+function _G.hello()
+    print("Hello, World!")
+end
+```
+This is why it's generally encouraged to make functions local.
+
+### [Tables](https://www.lua.org/pil/11.html)
+These group together values, and can group together variables as well, since... those are just values. Tables in Lua implement two common types: (1) An array; and (2) A dictionary. These map keys to values, and a key can be anything. In the example below, the key is `"hello"` and the value is `"value"`. However, the key can be a number, another table, or even a function object, just like the value. Tables in Lua can both be used for dictionaries and arrays, even at the same time.
+```lua
+local mytable = {}
+mytable["hello"] = "value"
+print(mytable["hello"]) --> "value"
+```
+### [Functions](https://www.lua.org/pil/5.html)
+These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
+
+### [Statements](https://www.lua.org/pil/4.html)
+Loop statements such as `while`, or `repeat`. Conditional statements like `if`, and so on are vital in controlling the execution of your script.
 
 ## Setting up your environment // by jerry123
 
@@ -187,7 +221,8 @@ Notice how we have a function **inside of the menu.action**? Basically, we can m
 We could've done:
 
 ```lua
-local function notificationHi() --it's a LOCAL function because it's only used here, not GLOBAL to be used everywhere.
+local function notificationHi()
+    -- it's a LOCAL function because it's only used here, not GLOBAL to be used outside of the script.
     util.toast("Hi!")
 end
 menu.action(menu.my_root(), "Hi Button!", {}, "Help text", sayHi)

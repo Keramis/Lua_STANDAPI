@@ -221,7 +221,7 @@ Notice how we have a function **inside of the menu.action**? Basically, we can m
 We could've done:
 
 ```lua
-local function notificationHi()
+local function sayHi()
     -- it's a LOCAL function because it's only used here, not GLOBAL to be used outside of the script.
     util.toast("Hi!")
 end

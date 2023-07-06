@@ -1,334 +1,119 @@
-# LUA for the Stand Mod Menu
+# Stand LUA API -- Full Tutorial
+
+## This is a work-in-progress.
+
+#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire
+#### Good luck, and godspeed.
 
 ---
+<br></br>
 
-### Hello! It's your friendly neighborhood scriptcat.
-I made this in the hopes to stop getting people to stop asking very simple questions in the `#programming` channel.
-Hopefully this guide serves you somewhat well. Of course, if you have any questions, pop it into `#programming`, but please do ensure that your solution isn't readily avalible on Google first.
+# Section 1: Resources
+This section contains useful resources to aid you in your scripting journey. At any point, feee free to come back to this section.
 
-## So, what the hell is LUA?
+Also, please be sure to read through this list, as most of the answers to your questions will be found here.
 
-You should probably go through some YouTube tutorials on Lua. This will teach you a few things, nicknacks, and mostly Stand's API and the Natives for GTAV. I'm not going to go into too much depth on how to actually use the things that Lua has to offer because, frankly, other people have done it way better. However, you should certainly give the Programming in Lua book a read, which has a free online version here: https://www.lua.org/pil/contents.html
+[Native Documentation](https://nativedb.dotindustries.dev/natives) -- Contains the native functions from GTA V. These are the functions that govern the game, and we can use them via the menu. Almost every single basic feature can be achieved with a combination of these.
 
-It's very important to understand the basics of Lua before you dive into developing scripts, even if your script is simple. This will make the process much easier on you, and also allow you to write much more efficient scripts than you would otherwise. Feel free to ask for clarification in the `#programming` channel if you don't understand something from the Lua website.
+[Stand LUA Documentation](https://stand.gg/help/lua-api-documentation) -- Contains the functions necessary to add features to Stand. Everything from buttons to sliders to submenus, and even simpler versions of native functions can be found here.
 
-## You should probably watch a YouTube tutorial to get the general gist of the language.
+[Pluto Documentation](https://pluto-lang.org/docs/Introduction) -- Stand uses a custom LUA fork made by a well-known member and staff member well in that case, and this contains that documentation. You do not need to add .pluto to your extension, as both LUA and PLUTO scripts get interpreted by Stand's engine as text, then run as pluto scripts. This means you can either write your script in LUA, PLUTO, or a combination of both.
 
-Got your basic knowledge? Good. You should've learned:
+[Data Dumps](https://github.com/DurtyFree/gta-v-data-dumps) -- This is a repository of well-known data dumper durtyfree on GitHub, and is extremely helpful for developing scripts.
 
-### [Types](https://www.lua.org/pil/2.html)
-Lua has several basic types, but these four are the most common.
-- `nil`
-- `string`
-- `number`
-- `boolean`
+[Decompiled Scripts](https://github.com/Primexz/GTAV-Decompiled-Scripts) -- These are scripts that govern GTA V, which have been decompiled for your convenience. Global variables and the way missions work are detailed in here, if you can read them. Keep in mind that this includes not just GTA Online scripts, but GTA V ones as well, meaning if you don't look where you need to, you'll be led on a wild goose chase.
 
-### [Expressions & Operators](https://www.lua.org/pil/3.html)
-Expressions include things like basic arthimetic — for example, addition, subtraction — and the priority of these operations so you don't accidentally perform one before another.
+[Hash Database](https://github.com/calamity-inc/gta-v-joaat-hash-db) -- An alternative (and possibly more comprehensible) version of the Data Dumps, which contains JOAAT (Jenkins-One-At-A-Time) hashes for GTA V, including pickups, weapons, and more.
 
-### [Variables](https://www.lua.org/pil/4.2.html)
-These are basically 'containers' for values. These containers are identified by alphanumeric names — these are called identifiers — and they come in two types: global variables, and local variables. As you would've learned plenty about local variables from your basic knowledge, you should note that all global variables are really keys inside the `_G` table.
+[UnknownCheats GTA V Section](https://www.unknowncheats.me/forum/grand-theft-auto-v/) -- This houses more experienced developers that develop cheats and try to look for exploits in GTA V.
 
-Such that:
+[Yimura's Offsets](https://github.com/Yimura/GTAV-Classes) -- In making his open-source GTA V menu YimMenu, Yimura has provided us with the offsets, which can be useful if you are screwing around with memory and offsets in your scripts.
+
+Other Stand Scripts -- No link for this one, but just browse the repository in the Stand menu, or browse #lua-scripts in the discord server. You learn scripting by looking at others! (If you copy-and-paste, you will not learn anything. Learn by examining and changing or improving.)
+
+#programming -- Discord channel for developers; like you! Please don't be afraid to ask questions here, but be sure to explore the entire documentation before asking, or you will look lazy to others. Try to be respectful, and people will most likely be respectful back!
+
+----
+<br/>
+
+# Section 2: Natives --What?
+
+Okay, you've read the section above, and you understand native functions. But... there are 4 versions in Stand!
+
+By using `util.require_natives` at the top of your script, you are telling Stand to actually look for native functions in your script; if you don't use this, none of your script will work! (Well, except for the menu stuff, but no features will work)
+
+Natives come in different "flavors;" `regular`, `g`, or `uno`.
+
+- **Regular**: Regular natives. You need to follow the native documentation to the dot. No derivations here, really.
+- **G**: Omits namespaces. So, instead of doing (for example) `ENTITY.GET_ENTITY_MODEL`, you would instead just do `GET_ENTITY_MODEL`. The thing before the period is the *namespace*.
+- **Uno**: No type safety, and `Vector3` objects will be interpreted as 3 floats, so you do not need to expand them for natives. For example, normally, you would do:
+```
+ENTITY.SET_ENTITY_COORDS(entity, x, y, z, bool, bool, bool, bool)
+```
+ Notice the ***x, y, z***? With Uno, you can do:
+ ```
+ ENTITY.SET_ENTITY_COORDS(entity, vec, bool, bool, bool, bool)
+ ```
+ replacing the ***x, y, z*** with a `Vector3`. Keep in mind this __will not work for tables you made yourself__, unless you've used another variable, using v3.new.
+- **G-Uno**: a combination of both G and Uno, eliminating both namespaces and type safety, and expanding vector3s to 3 floats.
+
+----
+
+<br/>
+
+# Section 3: Developing Your Script
+
+Okay, you're ready to develop your script. Now what? Well, time to get started!
+Go into your Lua Scripts folder in Stand. This can be done via the menu, in the "Lua Scripts" section and doing "Open Folder," or navigating through `Appdata > Roaming > Stand > Lua Scripts`.
+
+Make a new file here. You can do this via making a new text file, or going into your favorite text/script editor (I personally recommend [Sublime Text](https://www.sublimetext.com/)) and saving your script there, with the extension of either `.lua` or `.pluto`.
+
+Make sure to include natives at the top of your script! Without this, you'll only be able to access Stand's functions and not the game's Native functions, which will significantly reduce your potential. If you only want to use Stand functions, either for a test (like making a "Hello World!" toast/print) or for memory, then you don't have to include natives. 99% of the time, you will have to, though, so do it.
+
+Start developing! ***The hardest thing to do is to start***; to get ideas. Personally, I would think of any issues or flaws you want quelled with GTA V, and think about how to solve them, then break them down into little steps that make up one big thing. Can't see players? Make a simple ESP! Can't aim properly? Make an aimbot! Can't find objects? Find them via teleporting to them! The world is your oyster. Later on, we'll be dissecting some of my scripts in order to walk you through examples of how certain features work, if you're up for that.
+
+----
+
+<br/>
+
+# Section 4: Globals / Game Scripts
+`Global variables` are variables that do not change from script to script; therefore they have the name "global variables."
+
+These global variables govern almost everything in GTA Online, from **cooldowns** to **product/supplies** to even the speed of **Terrorbyte drones**. If you want to create scripts that utilize these variables, you're going to have to dig through decompiled scripts, which have been provided above in the [resources](#section-1-resources) section.
+
+Digging through these scripts is an arduous process, requiring more time and effort than casually creating features for your script, but they will pay off in the long run. It's best to know where to start looking for the things you want, or else you will face difficulties and burnout. ***Please look closely at the script names and determine which are right for your use case***.
+
+For example, if I wanted to remove the cooldown of a specific thing in the Interaction Menu, I would look for a background script that has some mention of the Interaction Menu. This would be `am_pi_menu.c`.
+
+| Shortened Version | Meaning |
+| ---- | ---- |
+| am | ambient |
+| fm | freemode |
+| gb | goonboss (CEO/MC/VIP) |
+| mp | multiplayer |
+
+Keep in mind that not *every* script that isn't marked with `mp` isn't multiplayer, it's just because of a naming convention. Since this repository contains every single game script and not just the Online ones, you'll have to do some minor sifting.
+
+![They're never consistent...](https://i.e-z.host/x4u99kzd.png)
+
+Setting and getting the values of these global variables is easily done with `memory.read` and `memory.write` functions, along with `memory.script_global`, since you need it to give you the memory address for said global variable to write into.
+
+Global variables are formatted with the offset present (thank you decompilers) that allows us access to them immediately. Take, for example, global `Global_262145.f_13150` (`"GB_SIGHTSEER_TIME_LIMIT"`) from the `tunables_processing.c` game script. From the name, we can immediately tell that this is the ***Sightseer VIP*** Work time limit variable, and if we change it, we'll probably change the time limit for said VIP Work. To actually change it, we'll need to add the offset to the chunk of the main global variable, making our final value be: `262145 + 13150 = 275295.`
+
+We now plug this value into our function of reading or writing the global variable;
+
 ```lua
-function hello()
-    print("Hello, World!")
+function ReadIntFromAddr(addr)
+    return memory.read_int(memory.script_global(addr))
 end
 ```
-Is equal to:
 ```lua
-function _G.hello()
-    print("Hello, World!")
+function WriteIntToAddr(addr, write)
+    memory.write_int(memory.script_global(addr), write)
 end
 ```
-This is why it's generally encouraged to make functions local.
 
-### [Tables](https://www.lua.org/pil/11.html)
-These group together values, and can group together variables as well, since... those are just values. Tables in Lua implement two common types: (1) An array; and (2) A dictionary. These map keys to values, and a key can be anything. In the example below, the key is `"hello"` and the value is `"value"`. However, the key can be a number, another table, or even a function object, just like the value. Tables in Lua can both be used for dictionaries and arrays, even at the same time.
-```lua
-local mytable = {}
-mytable["hello"] = "value"
-print(mytable["hello"]) --> "value"
-```
-### [Functions](https://www.lua.org/pil/5.html)
-These are bits of code that can take parameters (things that you input), and can be ran. This makes it so that you don't have to copy-paste a shitton of code every single time you want to do ***`the same thing but a bit different`*** somewhere else in your script.
+. . . where addr is the value we have now got.
 
-### [Statements](https://www.lua.org/pil/4.html)
-Loop statements such as `while`, or `repeat`. Conditional statements like `if`, and so on are vital in controlling the execution of your script.
+Now, of course, keep in mind that not every single number is an integer. Most of them will be, but some are `floats` (decimals) or `longs` (64-bit integer numbers). Be sure to use the memory functions according to these use cases.
 
-## Setting up your environment // by jerry123
-
-Before you start writing any code you will have to choose a code editor. There's a lot of code editors you can use, however visual studio code is the most common one, it's what I use and is most familiar with so that's what I'll explain how too use. If you don't already have it installed you will have to [Download](https://code.visualstudio.com/download) it.
-
-![Screenshot%2022-06-09%172811.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20172811.jpg)
-
-Once you've set up visual studio code we'll head over to the sidebar and search for the lua extension, click install on the top one you see in the image above. This will help you with linting. This isn't going to be perfect so we'll have to go into visual studio settings and change some stuff.
-
-![Screenshot%202022-06-09%20184923.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20184923.jpg)
-
-The lua linter will conplain about indefined globals witch includes functions from stands api and natives. I would suggest adding all of the functions from stands api and the most common navive namespaces, or you can just copy paste ALL of them into your visual studio settings.json file like you see bellow.
-```json
-"Lua.diagnostics.globals": [
-    "menu",
-    "players",
-    "entities",
-    "chat",
-    "directx",
-    "util",
-    "v3",
-    "lang",
-    "filesystem",
-    "https",
-    "memory",
-    "profiling",
-    "SYSTEM",
-    "APP",
-    "AUDIO",
-    "BRAIN",
-    "CAM",
-    "CLOCK",
-    "CUTSCENE",
-    "DATAFILE",
-    "DECORATOR",
-    "DLC",
-    "ENTITY",
-    "EVENT",
-    "FILES",
-    "FIRE",
-    "GRAPHICS",
-    "HUD",
-    "INTERIOR",
-    "ITEMSET",
-    "LOADINGSCREEN",
-    "LOCALIZATION",
-    "MISC",
-    "MOBILE",
-    "MONEY",
-    "NETSHOPPING",
-    "NETWORK",
-    "OBJECT",
-    "PAD",
-    "PATHFIND",
-    "PED",
-    "PHYSICS",
-    "PLAYER",
-    "RECORDING",
-    "REPLAY",
-    "SAVEMIGRATION",
-    "SCRIPT",
-    "SECURITY",
-    "SHAPETEST",
-    "SOCIALCLUB",
-    "STATS",
-    "STREAMING",
-    "TASK",
-    "VEHICLE",
-    "WATER",
-    "WEAPON",
-    "ZONE"
-],
-```
-
-
-![Screenshot%202022-06-09%20173419.jpg](https://raw.githubusercontent.com/Jerrrry123/Lua_STANDAPI/main/Screenshot%202022-06-09%20173419.jpg)
-
-Stands supports some operators that isn't in base lua so if you want to use these without the linter complaining about it you will have to go into settings and change this setting. Alternatively you can add the text below to your settings.json
-
-```json
-"Lua.runtime.nonstandardSymbol": [
-    "+=",
-    "-=",
-    "!=",
-    "*=",
-    "/="
-],
-```
-
-
-## Time for the interesting portion!
-
-Make sure you read everything beforehand, and followed the steps (watch the tutorial already dammit). If you haven't, this will be... let's say... a bit difficult.
-
-### Anyways....
-
-- First, open up your `Stand` folder. This can be done through the launchpad, or through `C:\Users\<user>\Appdata\Roaming\Stand`.
-- Next, open the `Lua Scripts` folder. Self explanatory, right?
-- In here is where you will place all of your scripts. So go ahead and make a new text document, name it something, and add a `.lua` extension instead of the default `.txt` (if you don't have file extensions enabled, why are you even trying to bother with programming?).
-
-## Cool! So now what?
-
-Well... anything that comes across your mind, really! Take a gander through the [Stand Lua Api](https://stand.gg/help/lua-api-documentation). This might seem archaic and hard to understand at first, but I'll walk you through it:
-
-Let's take a menu function. For example, `menu.action()`. The entire action is:
-
-```lua
-int menu.action(int parent, string menu_name, table<any, string> command_names, string help_text, function on_click, ?function on_command = nil, ?string syntax = nil)
-```
-
-Seems daunting, no? Here's the human version, listed on a by-parameter basis.
-
-- `int` parent
-    - This is the variable that you put in for where this function (in this case, button), should appear. This either could be the `root`, which is where everything in your script starts from, or a `menu.list`, which is a list of functions. What this means is that you can either:
-        1. Put `menu.my_root()` (or a variable of it, doesn't matter, since variables store values) in the parent
-        2. Put a variable that has your `menu.list` value in it.
-- `string` menu_name
-    - This is just the name that will appear as your button.
-- `table`<any, string> command_names
-    - This is a `table` of valid commands that you can type into the Stand Command Box that will activate this function. Since it is a `table`, you can make multiple commands for one function.
-- `string` help_text
-    - This is the small print that appears at the bottom of the menu explaining what the hell this function actually does.
-- `funciton` on_click
-    - This is the function (code) that will be executed if you click this action button.
-- `?function` on_command `= nil`
-    - Basically, if you set this, this will run different code if you used the function from the command box or not. Notice how it says `=nil` at the end, and a `?` at the beginning? This is because this ***isn't required; if you have nothing there, it will do the same code if you click it, or use it from the command box***.
-- `?string` syntax `= nil`
-    - This changes what shows up in help text of the menu, like `Command: <string>`. If you put `"aaa"` in here, it will display `Command: aaa` instead of `Command: <commandname>`.
-
----
-
-## Pro tip: always use `util.keep_running()` at the top of your script to keep it running.
-
----
-
-### Let's make a quick button that does a notification, or a `toast`, that says "hi!".
-
-I will comment almost everything that I write, so you can get a semi-comprehensive understanding of what the hell I am doing.
-
-```lua
-util.keep_running() --this makes the script not stop running after it has done its job
-
-menu.action(menu.my_root(), "Hi Button!", {}, "This is help text!", function()
-    util.toast("Hi!") --the util.toast() function makes a notification of a string that you pass it.
-end)
---menu.my_root() makes it appear in the main script section. you could replace it with:
-local menuroot = menu.my_root()
---and then do:
-menu.action(menuroot, ...)
-```
-
-So what this does is:
-- Makes a button (action)
-    - `menu.action()`
-- That is in the `root` (main) script section
-    - `menu.my_root()` or, renamed (variable) `menuroot`
-- That has the name of `Hi Button!`
-- That has **no** commands that we can use for it (since the table is empty, nothing in the curly braces `{}`).
-- That has help text of `This is help text!`
-- That `toasts`, or *notifies*, the user with text `Hi!`.
-
-Notice how we have a function **inside of the menu.action**? Basically, we can make the function inside of it instead of having to make it ouside of our menu function. This can be either seen as lazy or resourceful, depending on who you ask.
-
-We could've done:
-
-```lua
-local function notificationHi()
-    -- it's a LOCAL function because it's only used here, not GLOBAL to be used outside of the script.
-    util.toast("Hi!")
-end
-menu.action(menu.my_root(), "Hi Button!", {}, "Help text", sayHi)
-```
-
-It does the same thing.
-
-If you wanted to make this button inside some sort of list, you would do:
-
-```lua
-local myList = menu.list(menu.my_root(), "My List!", {}, "")
-
-menu.action(myList, "Button inside list!", {}, "", function()
-    --code here
-end)
-```
-
-And you can do lists inside of lists. Imagine lists as folders.
-
-### Make sure to play around with this stuff, and get a somewhat decent understanding of how to write menu functions. Remember to look at [the API](https://stand.gg/help/lua-api-documentation) for functions.
-
----
-
-## Now onto GTAV stuff!
-
----
-
-What you first have to do is <ins>look at your options</ins>. Please, take a gander through [the native documentation](https://nativedb.dotindustries.dev/natives). **Natives** are functions that are native to GTAV, or, in actuality, the RAGE game engine that the game is based on. Just know that we can use these (well most) functions without any concerns for safety whatsoever.
-
-Please also remember to take a look at what `namespace`, or `category`, the functions are in. You cannot just call, for example, `GET_PLAYER_PED`, you have to do `PED.GET_PLAYER_PED`, with the `PED.` at the beginning being the category that it is in. You can find these categories by just scrolling up until you find it. They are BIG, in all caps.
-
-### Remember that, as with anything in LUA, you can **rename these functions**. Whenever someone wants to `get entity coords`, it would be a hassle to write out, in ALL CAPS, `ENTITY.GET_ENTITY_COORDS()`. You could, instead:
-
-```lua
-local getEntityCoords = ENTITY.GET_ENTITY_COORDS
-```
-
-And this lets you use the expression `getEntityCoords` instead of `ENTITY.GET_ENTITY_COORDS` every time you want to use `ENTITY.GET_ENTITY_COORDS`.
-
-Actually, while we're on the topic of `ENTITY.GET_ENTITY_COORDS`, take a look at the full function:
-
-```cpp
-Vector3 GET_ENTITY_COORDS(​Entity entity, Bool alive)
-```
-
-The `Vector3` at the beginning is what the function *returns*. So, for example, let's just say I had an entity named `entity1`. What I would do to save the coordinates would be:
-
-```lua
-local entCoords = ENTITY.GET_ENTITY_COORDS(entity1)
---notice how I didn't do anything for Bool alive.
---That's because it says: `alive` = Unused by the game, potentially used by debug builds of GTA in order 
---to assert whether or not an entity was alive.
-
---So.. it's not needed :). Always check the comments/descriptions on the native documentation. They help.
-```
-
-And now I have a `Vector3` variable named `entCoords`. But.. what exactly is a `Vector3` variable?
-
-Basically? A vector3 is just a table that contains x, y, and z values. (x and y are horizontal, z is vertical)
-
-```lua
-Vector3 = {x = xPos, y = yPos, z = zPos}
---so, to use it...
-local somePosition = --get position with code here
---now we have local variable somePosition as a table of x, y, z.
-```
-
-Use these coordinates in other functions as inputs. Since it's a table, you can do `somePosition.x` for x value, and so on for the `y` and `z` values.
-
-## So.. how the fuck do you use these?
-
-Well, to use natives, you will need to include the `natives-xxxx` file. This can be done with:
-`util.require_natives(xxxx)`. The most recent version is `1651208000`, so you would do
-`util.require_natives(1651208000)` at the top of your script.
-
-Fun fact: The number at the end of the name is a unix timestamp from when the file was generated :)
-
-```lua
-util.keep_running()
-util.require_natives(1651208000)
---now we do our code here!
-```
-
-## Challenge!
-
-Using your resources (Native Database, Stand API), make a `menu.action` that will teleport you to coordinates (0, 100, 100).
-
-### The solution is here; but don't look if you haven't tried. 90% of the learning is trying, failing, and trying again.
-
----
----
-
-```lua
-util.keep_running() --make the script keep running
-util.require_natives(1640181023) --need this to use the native functions
-
-local ourPlayer = PLAYER.GET_PLAYER_PED(players.user())
---this gets the player PED (or pedestrian) of a specified player. We specified players.user(), which is OUR player ID.
---So this gets OUR PED, which we can do lots with.
-
-ENTITY.SET_ENTITY_COORDS(ourPlayer, 0, 100, 100, false, false, false, false)
---void SET_ENTITY_COORDS(​Entity entity, float xPos, float yPos, float zPos, BOOL xAxis, BOOL yAxis, BOOL zAxis, BOOL clearArea)
---Axis - Invert Axis Flags
-
---The first 3 false statements are to NOT invert the axis, meaning that we don't invert our position (why would we ever
---want this?)
-
---The last false statement is to NOT clear the area when we teleport; we don't want to delete cars, or try to
---delete other people, which is a FREEZE event, and can get you kicked by other modders :)

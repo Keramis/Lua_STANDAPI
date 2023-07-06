@@ -94,7 +94,7 @@ For example, if I wanted to remove the cooldown of a specific thing in the Inter
 
 Keep in mind that not *every* script that isn't marked with `mp` isn't multiplayer, it's just because of a naming convention. Since this repository contains every single game script and not just the Online ones, you'll have to do some minor sifting.
 
-![They're never consistent...](https://i.e-z.host/x4u99kzd.png)
+![They're never consistent...](/neverconsistent.png)
 
 Setting and getting the values of these global variables is easily done with `memory.read` and `memory.write` functions, along with `memory.script_global`, since you need it to give you the memory address for said global variable to write into.
 

@@ -125,8 +125,10 @@ Now, of course, keep in mind that not every single number is an integer. Most of
 This section will go over some examples of features of a script, as well as certain GTA quirks.
 
 ```lua
---Spawn Vehicle
-function spawn_vehicle(vehicleHash, v3Position)
+--Spawn Vehicle Example
+function spawn_vehicle(vehName, v3Position)
+    local vehicleHash = util.joaat(vehName) --obtain the hash
+
     util.request_model(vehicleHash) --request the model (game loads it)
     --without loading the model we will not be able to spawn said model
 
@@ -141,3 +143,7 @@ function spawn_vehicle(vehicleHash, v3Position)
     end
 end
 ```
+
+In this example, we make a function spawn a vehicle. Unfortunately, that's not as easy as just calling `VEHICLE.CREATE_VEHICLE`, as you can see; we need to request the model. Things like this are what tripped me up when I was starting out, and they will trip you up, too, if you aren't careful.
+
+Now, keep in mind, even though you are inputting the vehicle name into this function, *it isn't actually the full name of the vehicle*. For example, the `Oppressor MK II` doesn't have that name in the game's code, it has the concisely named `"oppressor2"` name instead; make sure you are aware of this when writing your code. Remember the `hashes` and `data dumps` in the [resources](#section-1-resources) section from earlier? This is where they come in very handy.

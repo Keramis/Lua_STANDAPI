@@ -17,7 +17,7 @@ Also, please be sure to read through this list, as most of the answers to your q
 
 [Stand LUA Documentation](https://stand.gg/help/lua-api-documentation) -- Contains the functions necessary to add features to Stand. Everything from buttons to sliders to submenus, and even simpler versions of native functions can be found here.
 
-[Pluto Documentation](https://pluto-lang.org/docs/Introduction) -- Stand uses a custom LUA fork made by a well-known member and staff member well in that case, and this contains that documentation. You do not need to add .pluto to your extension, as both LUA and PLUTO scripts get interpreted by Stand's engine as text, then run as pluto scripts. This means you can either write your script in LUA, PLUTO, or a combination of both.
+[Pluto Documentation](https://pluto-lang.org/docs/Introduction) -- Stand uses a custom LUA fork made by a well-known member and staff member *well in that case*, and this contains that documentation. You do not need to add `.pluto` to your extension, as both `LUA` and `PLUTO` scripts get interpreted by Stand's engine as text, then run as `pluto` scripts. This means you can either write your script in LUA, PLUTO, or a combination of both.
 
 [Data Dumps](https://github.com/DurtyFree/gta-v-data-dumps) -- This is a repository of well-known data dumper durtyfree on GitHub, and is extremely helpful for developing scripts.
 
@@ -117,3 +117,27 @@ end
 
 Now, of course, keep in mind that not every single number is an integer. Most of them will be, but some are `floats` (decimals) or `longs` (64-bit integer numbers). Be sure to use the memory functions according to these use cases.
 
+----
+<br/>
+
+# Section 5: Examples
+
+This section will go over some examples of features of a script, as well as certain GTA quirks.
+
+```lua
+--Spawn Vehicle
+function spawn_vehicle(vehicleHash, v3Position)
+    util.request_model(vehicleHash) --request the model (game loads it)
+    --without loading the model we will not be able to spawn said model
+
+    if STREAMING.HAS_MODEL_LOADED(vehicleHash) then --check if the model was loaded
+
+        --you could do entities.create_vehicle (stand's) here, but we'll use the native:
+        VEHICLE.CREATE_VEHICLE(vehicleHash, v3Position.x, v3Position.y, v3Position.z,
+        0, true, true, true)
+
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(vehicleHash) --set the model as no longer needed (cleanup)
+
+    end
+end
+```

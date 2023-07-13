@@ -248,7 +248,7 @@ menu.toggle_loop(menu.my_root(), "ESP All Players", {}, "", function()
 
     for _, playerID in pairs(allPlayers) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(playerID)
-        local coords = ENTITY.GET_ENTITY_COOORDS(ped)
+        local coords = ENTITY.GET_ENTITY_COORDS(ped)
 
         local xmem_1, ymem_1 = memory.alloc(4), memory.alloc(4)
         local xmem_2, ymem_2 = memory.alloc(4), memory.alloc(4)

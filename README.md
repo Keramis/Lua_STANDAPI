@@ -226,3 +226,7 @@ menu.toggle_loop(menu.my_root(), "ESP All Players", {}, "", function()
     end
 end)
 ```
+
+In this example, we make a simple ESP using the native DRAW_LINE functions. Keep in mind that this will not draw lines through some walls, since the native is written that way. If you do want to do that, you'll have to use stand's `directx` functions to draw lines via the screen, so you'll also have to do `world coords to screen coords`.
+
+Getting all players in a table via the `players.list` Stand function, we can then iterate through each playerID in order to get their positino, then draw a line towards them. Everything else should be self-explanatory with [resources](#section-1-resources).

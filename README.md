@@ -2,7 +2,7 @@
 
 ## This is a work-in-progress.
 
-#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire and full.access
+#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire
 #### Good luck, and godspeed.
 
 ---
@@ -208,3 +208,21 @@ end
 In this example, we make a function spawn a vehicle. Unfortunately, that's not as easy as just calling `VEHICLE.CREATE_VEHICLE`, as you can see; we need to request the model. Things like this are what tripped me up when I was starting out, and they will trip you up, too, if you aren't careful.
 
 Now, keep in mind, even though you are inputting the vehicle name into this function, *it isn't actually the full name of the vehicle*. For example, the `Oppressor MK II` doesn't have that name in the game's code, it has the concisely named `"oppressor2"` name instead; make sure you are aware of this when writing your code. Remember the `hashes` and `data dumps` in the [resources](#section-1-resources) section from earlier? This is where they come in very handy.
+
+
+```lua
+--Simple ESP Example
+util.require_natives("2944a") --require natives
+menu.toggle_loop(menu.my_root(), "ESP All Players", {}, "", function()
+    local myCoords = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+    local allPlayers = players.list(false, true, true) --don't include yourself!
+
+    for _, playerID in pairs(allPlayers) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(playerID)
+        local coords = ENTITY.GET_ENTITY_COORDS(ped)
+        GRAPHICS.DRAW_LINE(myCoords.x, myCoords.y, myCoords.z,
+            coords.x, coords.y, coords.z,
+            255, 255, 255, 255)
+    end
+end)
+```

@@ -2,7 +2,7 @@
 
 ## This is a work-in-progress.
 
-#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire
+#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire and full.access
 #### Good luck, and godspeed.
 
 ---
@@ -42,20 +42,81 @@ Okay, you've read the section above, and you understand native functions. But...
 
 By using `util.require_natives` at the top of your script, you are telling Stand to actually look for native functions in your script; if you don't use this, none of your script will work! (Well, except for the menu stuff, but no features will work)
 
-Natives come in different "flavors;" `regular`, `g`, or `uno`.
+### Natives come in different "flavors;" `regular`, `g`, or `uno`.
 
-- **Regular**: Regular natives. You need to follow the native documentation to the dot. No derivations here, really.
-- **G**: Omits namespaces. So, instead of doing (for example) `ENTITY.GET_ENTITY_MODEL`, you would instead just do `GET_ENTITY_MODEL`. The thing before the period is the *namespace*.
-- **Uno**: No type safety, and `Vector3` objects will be interpreted as 3 floats, so you do not need to expand them for natives. For example, normally, you would do:
+| Flavor | Meaning |
+| ---- | ---- |
+| Regular (just include the native) | Regular natives. You'll need to follow the native documentation precisely; no deviations. |
+| g | Omits namespaces. So, instead of doing (for example) `ENTITY.GET_ENTITY_MODEL`, you would instead just do `GET_ENTITY_MODEL`. The thing before the period is the *namespace*. |
+| uno | No type safety, and `Vector3` objects will be interpreted as 3 floats, so you do not need to expand them for natives. Keep in mind this will not work for tables, only `Vector3` objects that you have acquired via natives or your own doing, using `v3` from Stand's library. |
+| g-uno | A combination of both *g* and *uno* natives. |
+
+### Reading the native documentation
+
+Reading the native documentation can be difficult for newcomers. Don't worry; you'll get the hang of it in no time.
+
+For example, take this function:
 ```
-ENTITY.SET_ENTITY_COORDS(entity, x, y, z, bool, bool, bool, bool)
+void SET_​PLAYER_​WANTED_​LEVEL(
+Player player,
+int wantedLevel,
+BOOL disableNoMission
+)
 ```
- Notice the ***x, y, z***? With Uno, you can do:
- ```
- ENTITY.SET_ENTITY_COORDS(entity, vec, bool, bool, bool, bool)
- ```
- replacing the ***x, y, z*** with a `Vector3`. Keep in mind this __will not work for tables you made yourself__, unless you've used another variable, using v3.new.
-- **G-Uno**: a combination of both G and Uno, eliminating both namespaces and type safety, and expanding vector3s to 3 floats.
+The native documentation in [resources](#section-1-resources) does a very good job of spelling everything out for us. Let's go through the function one-by-one.
+
+- The thing before the main function, the `void`, is the ***return type***. There are only two things to remember;
+    - If the return type is a `void`, setting a variable to it will end poorly; it returns nothing. Don't set anything equal to functions that have `void` return types.
+    - Every variable with a return type can be used anywhere that return type is accepted.
+- The main body of the function is `SET_PLAYER_WANTED_LEVEL`. This is just used to call the function.
+- `Player player` looks confusing, but the `Player` at the beginning (in caps) is the ***type***, and the second `player` (in lowercase) is the parameter.
+- Same thing applies for `int wantedlevel`; the `int` is the type (integer), and the `wwantedlevel` is the paremeter.
+- ...And same thing for the `BOOL disableNoMission`.
+
+To find the *namespace* of any function, all you'll have to do is scroll up until you see in BIG TEXT something like **PLAYER** or **CAM**; that's your namespace.
+
+Keep in mind that this works for almost all native functions. I say *almost*, because there are some natives that have paremeters with a star (`*`) next to them. If you know C/C++, you'll know where this is going, but if you don't, don't worry! We'll be getting into:
+
+### Advanced Natives
+
+Some natives, as we've discussed, have stars next to their paremeters. Take this one, for example:
+
+```
+BOOL GET_​SCREEN_​COORD_​FROM_​WORLD_​COORD(
+float worldX,
+float worldY,
+float worldZ,
+float* screenX,
+float* screenY
+)
+```
+This is the `GRAPHICS.GET_SCREEN_COORD_FROM_WORLD_COORD` native. This native does what it says it does; gets screen coords from world coords. But wait, there are no numbers in the return value, only BOOL!
+
+This is where you'll have to get into memory. These stars are pointers, and you'll have to put in variables with allocated memory into them.
+
+| Type | Bytes to allocate (size) |
+| ---- | ---- |
+| char | 1 |
+| short int (short) | 2 |
+| int | 4 |
+| float | 4 |
+| double | 8 |
+| long int (long) | 8 |
+| Vector3 | 24 |
+
+Currently, we're working with two floats, so we'll allocate two variables with size `4`.
+
+```lua
+--require natives blah blah
+local xmem = memory.alloc(4)
+local ymem = memory.alloc(4)
+
+GRAPHICS.GET_SCREEN_COORD_FROM_WORLD_COORD(myvec.x, myvec.y, myvec.z, xmem, ymem)
+
+local x, y = memory.read_float(xmem), memory.read_float(ymem)
+```
+
+There we go! That's how we extract values from functions that have these star symbols. You won't come by these very often, but it's good to know about them when you get the chance.
 
 ----
 

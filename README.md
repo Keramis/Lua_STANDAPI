@@ -2,7 +2,7 @@
 
 ## This is a work-in-progress.
 
-#### Authored by vs.galactic/kryptcat | Co-Authored by stand.gg/Sapphire
+#### Authored by `vs.galactic`/kryptcat | Co-Authored by `stand.gg`/Sapphire and `full.access`
 #### Good luck, and godspeed.
 
 ---

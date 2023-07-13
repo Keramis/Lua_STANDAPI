@@ -230,3 +230,39 @@ end)
 In this example, we make a simple ESP using the native DRAW_LINE functions. Keep in mind that this will not draw lines through some walls, since the native is written that way. If you do want to do that, you'll have to use stand's `directx` functions to draw lines via the screen, so you'll also have to do `world coords to screen coords`.
 
 Getting all players in a table via the `players.list` Stand function, we can then iterate through each playerID in order to get their positino, then draw a line towards them. Everything else should be self-explanatory with [resources](#section-1-resources).
+
+```lua
+--Stand Functions ESP Example
+util.require_natives("2944a")
+
+local whiteColor = {
+    r = 1.0,
+    g = 1.0,
+    b = 1.0,
+    a = 1.0
+}
+
+menu.toggle_loop(menu.my_root(), "ESP All Players", {}, "", function()
+    local myCoords = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+    local allPlayers = players.list(false, true, true)
+
+    for _, playerID in pairs(allPLayers) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(playerID)
+        local coords = ENTITY.GET_ENTITY_COOORDS(ped)
+
+        local xmem_1, ymem_1 = memory.alloc(4), memory.alloc(4)
+        local xmem_2, ymem_2 = memory.alloc(4), memory.alloc(4)
+
+        if (GRAPHICS.GET_SCREEN_COORD_FROM_WORLD_COORD(coords.x, coords.y, coords.z, xmem_1, ymem_1)) then --is the selected player visible on screen?
+            local x_1, y_1 = memory.read_float(xmem_1), memory.read_float(ymem_1)
+
+            if (GRAPHICS.GET_SCREEN_COORD_FROM_WORLD_COORD(myCoords.x, myCoords.y, myCoords.z, xmem_2, ymem_2)) then --are WE visible on screen?
+                local x_2, y_2 = memory.read_float(xmem_2), memory.read_float(ymem_2)
+                directx.draw_line(x_1, y_1, x_2, y_2, whiteColor) --if we are visible, draw from ourselves.
+            else
+                directx.draw_line(x_1, y_1, 0.5, 1.0, whiteColor) --if we are not visible (first person) draw from the middle bottom of the screen.
+            end
+        end
+    end
+end)
+```

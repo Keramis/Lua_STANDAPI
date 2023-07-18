@@ -266,3 +266,12 @@ menu.toggle_loop(menu.my_root(), "ESP All Players", {}, "", function()
     end
 end)
 ```
+
+In this example, the ESP is done with Stand's `directx` functions. Although this might look daunting, we'll go through the code, starting at the `memory.alloc` part one-by-one (because the previous is self-explanatory);
+- Allocating `xmem_1` and `ymem_1` with 4 bytes each, since each of them will hold a `float`, which has the size of 4 bytes. These two memory addresses will hold the output from our `GET_SCREEN_COORD_FROM_WORLD_COORD` function of whether or not the current player that we have selected from the for loop is visible on-screen.
+- Allocating `xxmem_2` and `ymem_2` is for our *own* position, since if we are in third-person, we want the line to come from us; this is just a stylistic choice.
+- The first if statement checks if the target player is even on the screen. If this if statement fails, we move on to the next player.
+- If it succeeds, we assign variables `x_1` and `y_1` to the actual values of our memory registers, using `read_float` on them.
+- The second if statement determines if *we ourselves* are visible on the screen.
+- If this if-statment fails, we just draw the line from the bottom center of the screen.
+- If this if-statment succeeds, we first read the values of our memory registers and assign them to `x_2` and `y_2` (just like how we did with the target player's variables), and then we draw the line.

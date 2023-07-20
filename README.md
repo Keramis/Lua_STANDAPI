@@ -178,7 +178,17 @@ end
 
 Now, of course, keep in mind that not every single number is an integer. Most of them will be, but some are `floats` (decimals) or `longs` (64-bit integer numbers). Be sure to use the memory functions according to these use cases.
 
+Keep in mind on how to read these offsets; (thank you @ImSapphire)
+- Replace `.f_` with `+`
+- Replace `[` with `+ 1 +`
+    - Script arrays have a hidden integer at the beginning that stores the array. The purpose of `+ 1` is to skip over that.
+    - If the array is an array of script structs, it will have the member struct size as a comment. For example, `Global_2657704[PLAYER::PLAYER_ID() /*463*/]`. In this case, you would convert that to `2657704 + 1 + (PLAYER.PLAYER_ID() * 463)`.
+- Replace `]` with nothing.
+
+As I do not want to steal all of Sapphire's work (he's already helped me out a ton), I'll leave a link to his markdown and the examples that he shows, along with some functions; [Sapphire's Markdown, "Script Globals and Locals" Section](https://github.com/ImSapphire/scripting-for-stand-gta-v#script-globals-and-locals)
+
 ----
+
 <br/>
 
 # Section 5: Examples

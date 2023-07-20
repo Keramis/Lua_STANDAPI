@@ -34,7 +34,6 @@ Other Stand Scripts -- No link for this one, but just browse the repository in t
 #programming -- Discord channel for developers; like you! Please don't be afraid to ask questions here, but be sure to explore the entire documentation before asking, or you will look lazy to others. Try to be respectful, and people will most likely be respectful back!
 
 ----
-<br/>
 
 # Section 2: Natives --What?
 
@@ -120,7 +119,6 @@ There we go! That's how we extract values from functions that have these star sy
 
 ----
 
-<br/>
 
 # Section 3: Developing Your Script
 
@@ -133,9 +131,41 @@ Make sure to include natives at the top of your script! Without this, you'll onl
 
 Start developing! ***The hardest thing to do is to start***; to get ideas. Personally, I would think of any issues or flaws you want quelled with GTA V, and think about how to solve them, then break them down into little steps that make up one big thing. Can't see players? Make a simple ESP! Can't aim properly? Make an aimbot! Can't find objects? Find them via teleporting to them! The world is your oyster. Later on, we'll be dissecting some of my scripts in order to walk you through examples of how certain features work, if you're up for that.
 
+### Here are some simple examples of interacting with the menu (making your own features) to help you get started:
+
+```lua
+local root = menu.my_root() --main script root
+
+root:action("Name", {"command1", "command2"}, "Description", function() --action = button
+--do something here....
+util.toast("HI!")
+end)
+```
+In this example, we make a simple button in the root section of our script (where the script first gets launched), and have it "toast" (Stand notification) the string "HI!". This can also be triggered by "command1" or "command2" in the *command box*. Notice how the command parameter is a table? You can add as many commands (or as few, even 0!) as you want!
+
+Keep in mind that there are two ways of doing this; you can do:
+```lua
+local root = menu.my_root()
+root:something(etc)
+```
+```lua
+local root = menu.my_root()
+menu.something(root, etc)
+```
+This works for your own lists as well!
+
+```lua
+local root = menu.my_root()
+root:list("List Name", {"listcommand"}, "List Description")
+
+list:action("In a list!", {}, "", function()
+
+end)
+```
+This example shows you how to create your own list. In the list, you can put anything, just like how you can put anything inside the `menu.my_root()` that we have assigned simply to `root` every single time. ***A list is basically a submenu, and is very useful for organizing your script.***
+
 ----
 
-<br/>
 
 # Section 4: Globals / Game Scripts
 `Global variables` are variables that do not change from script to script; therefore they have the name "global variables."
@@ -178,7 +208,7 @@ end
 
 Now, of course, keep in mind that not every single number is an integer. Most of them will be, but some are `floats` (decimals) or `longs` (64-bit integer numbers). Be sure to use the memory functions according to these use cases.
 
-Keep in mind on how to read these offsets; (thank you @ImSapphire)
+Keep in mind on how to read these offsets; (thank you [@ImSapphire](https://github.com/ImSapphire))
 - Replace `.f_` with `+`
 - Replace `[` with `+ 1 +`
     - Script arrays have a hidden integer at the beginning that stores the array. The purpose of `+ 1` is to skip over that.
@@ -189,7 +219,6 @@ As I do not want to steal all of Sapphire's work (he's already helped me out a t
 
 ----
 
-<br/>
 
 # Section 5: Examples
 
@@ -285,3 +314,7 @@ In this example, the ESP is done with Stand's `directx` functions. Although this
 - The second if statement determines if *we ourselves* are visible on the screen.
 - If this if-statment fails, we just draw the line from the bottom center of the screen.
 - If this if-statment succeeds, we first read the values of our memory registers and assign them to `x_2` and `y_2` (just like how we did with the target player's variables), and then we draw the line.
+
+```lua
+
+```
